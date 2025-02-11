@@ -1,4 +1,4 @@
-import SignUpForm from "@/app/components/auth/sign-up-form"
+import SignUpForm from "@/app/(auth)/components/auth/sign-up-form"
 import { auth } from "@/utils/auth" // path to your Better Auth server instance
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
