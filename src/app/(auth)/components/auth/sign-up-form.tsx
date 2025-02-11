@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { signUp } from "@/actions/sign-up"
-
-// Define the validation schema
+import { useTransition } from "react"
+import { LoadingSpinner } from "@/components/global/loading-spinner"
 const signUpSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -28,11 +28,10 @@ const signUpSchema = z
     path: ["confirmPassword"]
   })
 
-// Infer the type from the schema
 type SignUpFormValues = z.infer<typeof signUpSchema>
 
 const SignUpForm = () => {
-  // Initialize form with validation schema
+  const [isPending, startTransition] = useTransition()
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -43,10 +42,10 @@ const SignUpForm = () => {
     }
   })
 
-  // Handle form submission
   const onSubmit = async (data: SignUpFormValues) => {
-    // Handle sign up logic here
-    await signUp(data.name, data.email, data.password)
+    startTransition(async () => {
+      await signUp(data.name, data.email, data.password)
+    })
   }
 
   return (
@@ -117,8 +116,8 @@ const SignUpForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Sign up
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? <LoadingSpinner /> : "Sign up"}
           </Button>
         </form>
       </Form>

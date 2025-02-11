@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { signIn } from "@/actions/sign-in"
+import { useTransition } from "react"
+import { LoadingSpinner } from "@/components/global/loading-spinner"
 
 // Define the validation schema
 const loginSchema = z.object({
@@ -21,11 +23,10 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters")
 })
 
-// Infer the type from the schema
 type LoginFormValues = z.infer<typeof loginSchema>
 
 const LoginForm = () => {
-  // Initialize form with validation schema
+  const [isPending, startTransition] = useTransition()
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -34,10 +35,10 @@ const LoginForm = () => {
     }
   })
 
-  // Handle form submission
   const onSubmit = async (data: LoginFormValues) => {
-    // Handle login logic here
-    await signIn(data.email, data.password)
+    startTransition(async () => {
+      await signIn(data.email, data.password)
+    })
     console.log(data)
   }
 
@@ -79,8 +80,8 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Sign in
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? <LoadingSpinner /> : "Sign in"}
           </Button>
         </form>
       </Form>

@@ -1,16 +1,22 @@
 "use server"
 
-import { auth } from "@/utils/auth" // path to your Better Auth server instance
+import { auth } from "@/utils/auth"
+import { redirect } from "next/navigation"
 
-export const signIn = async (email: string, password: string) => {
-  const response = await auth.api.signInEmail({
-    body: {
-      email,
-      password
-    },
-    asResponse: true // returns a response object instead of data
-  })
-  console.log(response)
+export const signIn = async (
+  email: string,
+  password: string
+): Promise<void | { error: string }> => {
+  try {
+    await auth.api.signInEmail({
+      body: {
+        email,
+        password
+      }
+    })
+  } catch (error) {
+    return { error: "Invalid email or password" }
+  }
 
-  return response
+  redirect("/dashboard")
 }

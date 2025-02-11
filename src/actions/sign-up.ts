@@ -8,8 +8,7 @@ export const signUp = async (name: string, email: string, password: string) => {
       name,
       email,
       password
-    },
-    asResponse: true // returns a response object instead of data
+    }
   })
 
   return response

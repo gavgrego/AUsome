@@ -26,9 +26,6 @@ const DashboardPage = async () => {
   ]
   return (
     <div className="flex flex-col gap-4 p-4">
-      <div className="flex justify-center">
-        <h1>AUsome</h1>
-      </div>
       <div className="flex flex-row gap-4">
         <div className="basis-1/4">
           <GoldPrice />
